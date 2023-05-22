@@ -1,0 +1,53 @@
+---
+title: "Q4-8"
+author: "Paul Walden"
+date: "2023-05-22"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(socviz)
+library(gapminder)
+library(tidyverse)
+library(GGally)
+library(ggplot2)
+library(ggrepel)
+library(rlang)
+library(ggridges)
+library(cowplot)
+library(broom)
+library(maps)
+library(mapproj)
+library(mapdata)
+library(devtools)
+
+```
+
+
+
+```{r}
+Reasons <- read_excel("/cloud/project/data/Group Project 5_23 (3).xlsx")
+head(Reasons)
+
+```
+
+## Including Plots
+
+
+```{r}
+Reasons2 <- subset(Reasons, Year >= 2015)
+Reasons_filter <- Reasons2 %>% select(Year, Q4, Q5, Q6, Q7, Q8)
+Reasons_long <- tidyr::pivot_longer(Reasons_filter, cols = starts_with("Q"), names_to = "Question", values_to = "Value")
+ggplot(Reasons_long, aes(x = Year, y = Value, fill = Question)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Year", y = "Value", fill = "Year") +
+  scale_fill_discrete(name = "Question") +
+  ggtitle("Reasons for Vaping") +
+  scale_x_continuous(breaks = seq(min(Reasons2$Year), max(Reasons2$Year), by = 1))
+  theme_minimal()
+```
+
+```{r}
+
+```
