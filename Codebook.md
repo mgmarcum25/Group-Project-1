@@ -1,5 +1,5 @@
 # Group-Project-1
-This data is compiled from the National Youth Tobacco Survey, grades 6-12
+## This data is compiled from the National Youth Tobacco Survey, grades 6-12
 
 Data used: https://www.cdc.gov/tobacco/data_statistics/surveys/nyts/data/index.html
 
