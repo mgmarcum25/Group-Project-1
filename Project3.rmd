@@ -1,0 +1,96 @@
+---
+title: "Project 3"
+author: "Stone Gannon, Matthew Marcum, Paul Walden"
+date: "2023-05-23"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyr)
+library(socviz)
+library(gapminder)
+library(tidyverse)
+library(broom)
+library(modelr)
+library(dplyr)
+library(ggplot2)
+library(GGally)
+library(readxl)
+library(readr)
+library(cowplot)
+library(maps)
+library(devtools)
+
+```
+
+```{r}
+nicotine <- read_excel("/cloud/project/R.Markdown/Data/Group Project 5_23.xlsx")
+
+head(nicotine)
+```
+
+```{r}
+#Q1-Q3 Line graphs
+
+cigarettes <- ggplot(data = nicotine, mapping = aes(x = Year, y = Q1)) + geom_line()
+  
+cigarettes + geom_smooth(method = "lm", color = "red") + labs(x = "Year", y = "Percent of Individuals", title = "Cigarette Users", subtitle = "Uses substance in at least 5 of last 30 days", caption = "Source: CDC Nicotine Survey" )
+
+dip <- ggplot(data = nicotine, mapping = aes(x = Year, y = Q2)) + geom_line() 
+
+dip + geom_smooth(method = "lm", color = "red") +
+  labs(x = "Year", y = "Percent of Individuals", title = "Smokeless Tobacco Users", subtitle = "Uses substance in at least 5 of last 30 days", caption = "Source: CDC Nicotine Survey" )
+
+ecig <- ggplot(data = nicotine, mapping = aes(x = Year, y = Q3)) + geom_line()
+
+ecig + geom_smooth(method = "lm", color = "red") +
+  labs(x = "Year", y = "Percent of Individuals", title = "E-Cigarette Users", subtitle = "Uses substance in at least 5 of last 30 days", caption = "Source: CDC Nicotine Survey" )
+
+```
+
+```{r}
+Reasons <- read_excel("/cloud/project/R.Markdown/Data/Group Project 5_23.xlsx")
+Reasons2 <- subset(Reasons, Year >= 2015)
+```
+
+## Including Plots
+
+
+```{r}
+# Convert columns to consistent data type
+Reasons2$Q4 <- as.numeric(as.character(Reasons2$Q4))
+Reasons2$Q5 <- as.numeric(as.character(Reasons2$Q5))
+Reasons2$Q6 <- as.numeric(as.character(Reasons2$Q6))
+Reasons2$Q7 <- as.numeric(as.character(Reasons2$Q7))
+Reasons2$Q8 <- as.numeric(as.character(Reasons2$Q8))
+
+Reasons_filter <- Reasons2 %>% select(Year, Q4, Q5, Q6, Q7, Q8)
+
+Reasons_long <- tidyr::pivot_longer(Reasons_filter, cols = starts_with("Q"), names_to = "Question", values_to = "Value")
+
+ggplot(Reasons_long, aes(x = Year, y = Value, fill = Question)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "Year", y = "Value", fill = "Question") +
+  scale_fill_discrete(name = "Question") +
+  ggtitle("Reasons for Vaping") +
+  scale_x_continuous(breaks = seq(min(Reasons2$Year), max(Reasons2$Year), by = 1)) +
+  theme_minimal() + labs(y = "Percent", caption = "Source: CDC Nicotine Survey")
+```
+
+
+```{r}
+#Q9-Q10 Comparison
+
+#With Covid
+
+Q9andQ10 <- read_excel("/cloud/project/R.Markdown/Data/Q9Q10work.xlsx")
+
+Cool_factor <- ggplot(data = Q9andQ10, mapping = aes(x = Cause, y = Percent, fill = Cause)) +
+  geom_bar(stat = "identity")
+
+Cool_factor + labs(x = "Why do you use E-Cigarettes?", y = "Percent of Individuals", title = "E-Cigarette Use Causes in 2020", caption = "Source: CDC Nicotine Survey" )
+
+```
